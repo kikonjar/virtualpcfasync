@@ -18,7 +18,8 @@
       -->
     </external-service-usage>
     <!-- property node identifies a specific, configurable piece of data that the control expects from CDS -->
-    <property name="sampleProperty" display-name-key="Property_Display_Key" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="emailtemplateid" display-name-key="emailtemplatefield" description-key="Property_Desc_Key" of-type="SingleLine.Text" usage="bound" required="true" />
+    <property name="emailtemplatename" display-name-key="emailtemplatefieldname" description-key="Email Template Name" of-type="SingleLine.Text" usage="bound" required="false" />
     <!--
       Property node's of-type attribute can be of-type-group attribute.
       Example:
@@ -39,8 +40,9 @@
       <resx path="strings/virtualpcfasync.1033.resx" version="1.0.0" />
       -->
     </resources>
-    <!-- UNCOMMENT TO ENABLE THE SPECIFIED API
+     <!-- UNCOMMENT TO ENABLE THE SPECIFIED API-->
     <feature-usage>
+    <!--
       <uses-feature name="Device.captureAudio" required="true" />
       <uses-feature name="Device.captureImage" required="true" />
       <uses-feature name="Device.captureVideo" required="true" />
@@ -48,8 +50,9 @@
       <uses-feature name="Device.getCurrentPosition" required="true" />
       <uses-feature name="Device.pickFile" required="true" />
       <uses-feature name="Utility" required="true" />
+      -->
       <uses-feature name="WebAPI" required="true" />
     </feature-usage>
-    -->
+    
   </control>
 </manifest>

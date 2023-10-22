@@ -1,15 +1,26 @@
+import { IDropdownOption } from "@fluentui/react";
 import { IInputs, IOutputs } from "./generated/ManifestTypes";
-import { HelloWorld, IHelloWorldProps } from "./HelloWorld";
+import { ISelectorProps, SelectorFuncional } from "./Components/Selector";
 import * as React from "react";
+import axios  from "axios";
+import ObtenerLista from "./Helpers/Helper";
 
 export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs, IOutputs> {
     private theComponent: ComponentFramework.ReactControl<IInputs, IOutputs>;
     private notifyOutputChanged: () => void;
+    context: ComponentFramework.Context<IInputs>;
+    private currentValue?: string;
+    private currentValueName?: string;
+    private optionSeleccionada: IDropdownOption[];
+    private listaOpciones: IDropdownOption[];
+
 
     /**
      * Empty constructor.
      */
-    constructor() { }
+    constructor() {
+        this.listaOpciones = [];
+     }
 
     /**
      * Used to initialize the control instance. Controls can kick off remote server calls and other initialization actions here.
@@ -24,6 +35,12 @@ export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs,
         state: ComponentFramework.Dictionary
     ): void {
         this.notifyOutputChanged = notifyOutputChanged;
+        this.context = context;
+        this.currentValue = context.parameters.emailtemplateid.raw || '';
+        this.currentValueName = context.parameters.emailtemplatename.raw || '';
+        this.optionSeleccionada = [];
+        this.optionSeleccionada.push({key: this.currentValue, text: this.currentValue});
+        
     }
 
     /**
@@ -32,10 +49,29 @@ export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs,
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        const props: IHelloWorldProps = { name: 'Hello, World!' };
-        return React.createElement(
-            HelloWorld, props
-        );
+        debugger;
+
+        //this.listaOpciones = ObtenerLista();
+
+        const props: ISelectorProps = { 
+            optionList: this.listaOpciones,
+            defaultValue: context.parameters.emailtemplateid.raw || '',
+            onChange: (selectedOption?: IDropdownOption) => {
+				if (typeof selectedOption === 'undefined' || selectedOption.key === "") {
+					this.currentValue = undefined;
+                    this.currentValueName = undefined;
+				} else {
+					this.currentValue = <string>selectedOption.key;
+                    this.currentValueName = <string>selectedOption.text;
+				}
+
+				this.notifyOutputChanged();
+			} };
+
+
+            return React.createElement(
+                SelectorFuncional, props
+            );
     }
 
     /**
@@ -43,7 +79,10 @@ export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs,
      * @returns an object based on nomenclature defined in manifest, expecting object[s] for property marked as “bound” or “output”
      */
     public getOutputs(): IOutputs {
-        return { };
+        return {
+            emailtemplateid:this.currentValue,
+            emailtemplatename:this.currentValueName
+        };
     }
 
     /**
@@ -53,4 +92,32 @@ export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs,
     public destroy(): void {
         // Add code to cleanup control if necessary
     }
+
+
+
+    private  ObtenerOptionsAsync(): IDropdownOption[]
+    {
+        let optionArray: IDropdownOption[]  = [];
+
+        /*for (let i=0; i<10; i++)
+        {
+            optionArray.push({ key: i, text: "texto"+i });
+        }*/
+
+        const baseURL = "https://jsonplaceholder.typicode.com/posts/";
+
+        axios.get(baseURL).then((response) => {
+            response.data.forEach((element: { id: any; title: any; }) => {
+                optionArray.push({ key: element.id, text: element.title });
+            });
+
+            });
+
+
+
+        return optionArray;
+    }
+    
 }
+
+
