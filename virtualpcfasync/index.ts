@@ -49,10 +49,6 @@ export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs,
      * @returns ReactElement root react element for the control
      */
     public updateView(context: ComponentFramework.Context<IInputs>): React.ReactElement {
-        debugger;
-
-        //this.listaOpciones = ObtenerLista();
-
         const props: ISelectorProps = { 
             optionList: this.listaOpciones,
             defaultValue: context.parameters.emailtemplateid.raw || '',
@@ -94,29 +90,6 @@ export class virtualpcfasync implements ComponentFramework.ReactControl<IInputs,
     }
 
 
-
-    private  ObtenerOptionsAsync(): IDropdownOption[]
-    {
-        let optionArray: IDropdownOption[]  = [];
-
-        /*for (let i=0; i<10; i++)
-        {
-            optionArray.push({ key: i, text: "texto"+i });
-        }*/
-
-        const baseURL = "https://jsonplaceholder.typicode.com/posts/";
-
-        axios.get(baseURL).then((response) => {
-            response.data.forEach((element: { id: any; title: any; }) => {
-                optionArray.push({ key: element.id, text: element.title });
-            });
-
-            });
-
-
-
-        return optionArray;
-    }
     
 }
 

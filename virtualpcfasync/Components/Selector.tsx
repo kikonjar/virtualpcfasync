@@ -14,8 +14,6 @@ const dropdownStyles: Partial<IDropdownStyles> = {
 };
 
 
-
-
 export function SelectorFuncional(props: ISelectorProps) {
     const [ListaOpciones, setListaOpciones] = useState<Array<IDropdownOption>>([]);
 
@@ -23,7 +21,7 @@ export function SelectorFuncional(props: ISelectorProps) {
         ObtenerLista().then((lista) => {
             setListaOpciones(lista);
         });
-    })
+    }, [])
 
     return <Dropdown
     placeholder="Select a template"
